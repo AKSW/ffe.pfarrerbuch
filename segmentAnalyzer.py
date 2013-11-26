@@ -33,8 +33,8 @@ class SegmentAnalyzer:
             elif output[0] == 'ordination':
                 self.vicar.ordination = output[1]
             elif output[0] == 'son' or 'daughter':
-                if self.vicar.offspring[0] == 'k.A.':
-                    self.vicar.offspring[0] = output
+                if self.vicar.offspring == 'k.A.':
+                    self.vicar.offspring = output
                 elif (self.segment[i - 1])[0:2] == 'S.' or 'T.':
                     (self.vicar.offspring[-1:])[1] = (self.vicar.offspring[-1:])[1] + line
                     n = i + 1
