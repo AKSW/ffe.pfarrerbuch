@@ -30,7 +30,7 @@ current bugs:
     - offspring does not work properly
 """
 
-from analyzer import Analyzer
+from segmentAnalyzer import SegmentAnalyzer
 from vicar import Vicar
 import codecs
 
@@ -39,49 +39,6 @@ class Parser:
 
     def __init__(self, fileName):
         self.filename = fileName
-
-    def createVicarEntry(self, segment):
-        """
-        creates a new Vicar object
-        initilizing vicar with 'k.A.' statements for "keine Angabe"
-        """
-        vicar = Vicar('k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.',
-                      'k.A.', 'k.A.')
-        for i, line in enumerate(segment):
-            if line != '\n' and i < 1:
-                vicar.name = line
-                continue
-            elif line != '\n':
-                analyzer = Analyzer(line)
-                output = analyzer.analyze()
-            else:
-                continue
-            if output[0] == 'dates':
-                vicar.birthday = output[1]
-                vicar.obit = output[2]
-            elif output[0] == 'parents':
-                vicar.father = output[1]
-                vicar.mother = output[2]
-            elif output[0] == 'father':
-                vicar.father = output[1]
-            elif output[0] == 'mother':
-                vicar.mother = output[1]
-            elif output[0] == 'ordination':
-                vicar.ordination = output[1]
-            elif output[0] == 'son' or 'daughter':
-                if vicar.offspring[0] == 'k.A.':
-                    vicar.offspring[0] = output
-                elif (segment[i - 1])[0:2] == 'S.' or 'T.':
-                    (vicar.offspring[-1])[1] = (vicar.offspring[-1])[1] + line
-                    n = i + 1
-                    while (segment[n])[0:2] != 'S.' or 'T.':
-                        (vicar.offspring[-1])[1] = (vicar.offspring[-1])[1]
-                        + segment[n]
-                        del segment[n]
-                        n = n + 1
-            elif output[0] == 'misc':
-                vicar.misc = vicar.misc + output[1]
-        return vicar
 
     def readInputFile(self):              # reads the input file
         f = open(self.filename, 'r')
@@ -121,45 +78,16 @@ def main():
     """
     main method for this project which creates the outputfile
     """
+    output = open('outputTex.txt', 'w+')
     parser = Parser('inputText.txt')
-    output = open('outputText.txt', 'w+')
     output.write('<file>\n')
     for segment in parser.segmentation(parser.readInputFile()):
-        vicar = parser.createVicarEntry(segment)
-        output.write('\t<vicar>\n\t\t<name>\n\t\t\t' + vicar.name +
-        '\n\t\t</name>\n\t\t<birthday>\n\t\t\t' + vicar.birthday +
-        '\n\t\t</birthday>\n\t\t<obit>\n\t\t\t' + vicar.obit +
-        '\n\t\t</obit>\n\t\t<father>\n\t\t\t' + vicar.father +
-        '\n\t\t</father>\n\t\t<mother>\n\t\t\t' + vicar.mother +
-        '\n\t\t</mother>\n\t\t<ordination>\n\t\t\t' + vicar.ordination +
-        '\n\t\t</ordination>\n\t\t<offspring>\n\t\t\t')
-        if vicar.offspring[0] == 'k.A.':
-            for children in vicar.offspring:
-                if children[0] == 'son':
-                    output.write('<son>\n\t\t\t\t' + children[1] +
-                    '\n\t\t\t</son>\n\t\t\t')
-                elif children[0] == 'daughter':
-                    output.write('<daughter>\n\t\t\t\t' + children[1] +
-                    '\n\t\t\t</daughter>\n\t\t\t')
-            output.write('\n\t\t')
-        else:
-            output.write('k.A.\n\t\t')
-        output.write('</offspring>\n\t\t<misc>\n\t\t\t' + vicar.misc +
-        '\n\t\t</misc>\n\t</vicar>\n\n')
+        vicar = Vicar('k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.',
+                      'k.A.', 'k.A.')
+        analyzer = SegmentAnalyzer(segment, vicar)
+        output.write(analyzer.createEntry())
     output.write('</file>')
-    output.close()
+    output.close
 
-
-"""    Test method to just segmentize all vicars
-    parser = Parser('inputText.txt')
-    output = open('outputText.txt', 'w+')
-    output.write('<entry>\n')
-    for segment in parser.segmentation(parser.readInputFile()):
-        output.write('\t<segment>\n')
-        for line in segment:
-            output.write('\t\t' + line)
-        output.write('\t<\segment>\n\n')
-    output.write('<\entry>')
-"""
 if __name__ == '__main__':                # call if module is called as main
     main()
