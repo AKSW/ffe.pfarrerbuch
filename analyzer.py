@@ -78,11 +78,11 @@ def main():                                        # main class (testing)
     text = 'T. Konrad, * Bucha b. Jena 21.08.1872 '
     analyzer = Analyzer(text)
     output = analyzer.analyze()
-    print analyzer.analyze()
+    print(analyzer.analyze())
     vicar = Vicar('k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.'
                   'k.A.', 'k.A.', 'k.A.')
-    print vicar.birthday
-    print vicar.obit
+    print(vicar.birthday)
+    print(vicar.obit)
 
 if __name__ == '__main__':                # call if module is called as main
     main()

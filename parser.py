@@ -78,7 +78,7 @@ def main():
     """
     main method for this project which creates the outputfile
     """
-    output = open('outputText.txt', 'w+')
+    output = open('outputText.xml', 'w+')
     parser = Parser('inputText.txt')
     output.write('<file>\n')
     for segment in parser.segmentation(parser.readInputFile()):
