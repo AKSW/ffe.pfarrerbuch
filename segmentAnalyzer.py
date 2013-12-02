@@ -35,13 +35,13 @@ class SegmentAnalyzer:
             elif output[0] == 'son' or 'daughter':
                 if self.vicar.offspring == 'k.A.':
                     self.vicar.offspring = output
-                elif (self.segment[i - 1])[0:2] == 'S.' or 'T.':
-                    (self.vicar.offspring[-1:])[1] = (self.vicar.offspring[-1:])[1] + line
-                    n = i + 1
-                    while (self.segment[n])[0:2] != 'S.' or 'T.':
-                        (self.vicar.offspring[-1:])[1] = (self.vicar.offspring[-1:])[1] + self.segment[n]
-                        self.segment[n] = '\n'
-                        n = n + 1
+                #elif (self.segment[i - 1])[0:2] == 'S.' or 'T.':
+                #    (self.vicar.offspring[-1:])[1] = (self.vicar.offspring[-1:])[1] + line
+                #    n = i + 1
+                #    while (self.segment[n])[0:2] != 'S.' or 'T.':
+                #        (self.vicar.offspring[-1:])[1] = (self.vicar.offspring[-1:])[1] + self.segment[n]
+                #        self.segment[n] = '\n'
+                #        n = n + 1
             elif output[0] == 'misc':
                 self.vicar.misc = self.vicar.misc + output[1]
         return self.vicar
