@@ -78,7 +78,7 @@ def main():
     """
     main method for this project which creates the outputfile
     """
-    output = open('outputTex.txt', 'w+')
+    output = open('outputText.txt', 'w+')
     parser = Parser('inputText.txt')
     output.write('<file>\n')
     for segment in parser.segmentation(parser.readInputFile()):
