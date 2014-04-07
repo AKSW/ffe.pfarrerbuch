@@ -1,7 +1,9 @@
-= FFE Pfarrerbuch =
+FFE Pfarrerbuch
+===============
 This is a flat file extractor (ffe) for in the end generating RDF to be used by the pfarrerbuch project.
 
-== Usage ==
+Usage
+-----
 
 Input is expected in `inputText.txt`.
 

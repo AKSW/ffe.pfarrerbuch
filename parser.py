@@ -33,6 +33,7 @@ current bugs:
 from segmentAnalyzer import SegmentAnalyzer
 from vicar import Vicar
 import codecs
+import linecache
 
 
 class Parser:
@@ -41,7 +42,7 @@ class Parser:
         self.filename = fileName
 
     def readInputFile(self):              # reads the input file
-        f = open(self.filename, 'r')
+        f = open(self.filename, 'r', encoding="utf8")
         text = []
         for line in f:
             text.append(line)
@@ -53,31 +54,31 @@ class Parser:
         segment = []
         count = 0
         for line in text:
-            if count == 1 and line == "\n":
-                segment.append(line)
-                count = 5
-            elif count == 5 and line == "\n":
-                segment.append(line)
-                count = 0
+            if count == 0 and line == "\n":
                 segments.append(segment[:])
                 segment[:] = []
-            elif count == 5 and line != "\n":
-                segments.append(segment[:])
-                segment[:] = []
+                count = 1
+            elif count == 1 and line != "\n":
+                buf = line
+                count = 2
+            elif count == 2 and "Ord.:" in line:
+                segment.append(buf)
                 segment.append(line)
                 count = 0
-            elif count == 0 and line == "\n":
-                segment.append(line)
-                count = count + 1
-            else:
+            elif count == 2:
+                count = 1
+            elif count == 0:
                 segment.append(line)
         return segments
 
 
+
 def main():
+    parser = Parser('input.txt')
+    print(parser.segmentation(parser.readInputFile()))
     """
     main method for this project which creates the outputfile
-    """
+
     output = open('outputText.xml', 'w+')
     parser = Parser('inputText.txt')
     output.write('<file>\n')
@@ -88,6 +89,6 @@ def main():
         output.write(analyzer.createEntry())
     output.write('</file>')
     output.close
-
+"""
 if __name__ == '__main__':                # call if module is called as main
     main()
