@@ -20,7 +20,7 @@ class Vicar(object):
     pastors = ['k.A.']
     institutions = ['k.A.']
     teachers = ['k.A.']
-    education = 'k.A.'
+    education = ['k.A.']
     misc = 'k.A.'
     archive = 'k.A.'
     literature = 'k.A.'

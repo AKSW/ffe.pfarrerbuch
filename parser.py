@@ -4,7 +4,7 @@
 Parser module which is relevant to parse a rawtext-file into a specific
 XML - Format
 Author: Robert R.
-Version: 0.4
+Version: 1.0
 
 This file is the main-file and should be called as main in order to parse
 a certain document
@@ -19,16 +19,15 @@ format convention of the raw-text:
     - each entry need to be seperated with a new line
 
 current bugs:
-    - encoding in output file
-    - misc is not properly parsed
-    - education is not implemented
-    - offspring does not work properly
+    - ?
+
+to-do:
+    fix stripLine() in segmentAnalyzer
 """
 
 from segmentAnalyzer import SegmentAnalyzer
 from vicar import Vicar
 import codecs
-import linecache
 
 
 class Parser:
@@ -69,17 +68,17 @@ class Parser:
 
 def main():
     parser = Parser('input.txt')
-    output = open('outputText.xmk', 'w+')
+    output = open('outputText.xml', 'w+')
     output.write('<file>\n')
     for segment in parser.segmentation(parser.readInputFile()):
-        vicar = Vicar('k.A.','k.A.','k.A.','k.A.','k.A.','k.A.','k.A.',['k.A.'],
-                        ['k.A.'],['k.A.'],['k.A.'],['k.A.'],['k.A.'],'k.A.',
-                        'k.A.','k.A.','k.A.')
-        analyzer = SegmentAnalyzer(segmen, vicar)
+        vicar = Vicar('k.A.','k.A.','k.A.','k.A.','k.A.','k.A.',
+                        'k.A.',['k.A.'],['k.A.'],['k.A.'],['k.A.'],
+                        ['k.A.'],['k.A.'],['k.A.'],'k.A.','k.A.',
+                        'k.A.')
+        analyzer = SegmentAnalyzer(segment, vicar)
         output.write(analyzer.createEntry())
     output.write('</file>')
     output.close
-    print(parser.segmentation(parser.readInputFile()))
 
 if __name__ == '__main__':                # call if module is called as main
     main()
