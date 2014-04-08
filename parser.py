@@ -15,13 +15,8 @@ format convention of the raw-text:
     - name should be always in the first line of a new entry
     - no headers
     - no frontpages or other text besides the entries
-    - birth needs to be indicated with *
-    - father needs to be listed first with V:
-    - mother needs to be listed with M:
-    - daughter needs to be listed with T. and a son with S.
-    - ordination needs to be adressed with ord.
-    - the core information of each entry should never contain a blank line
-    - a whole entry needs to have one blank line before the source
+    - first line should be the name / entry of the first vicar
+    - each entry need to be seperated with a new line
 
 current bugs:
     - encoding in output file
@@ -72,23 +67,19 @@ class Parser:
         return segments
 
 
-
 def main():
     parser = Parser('input.txt')
-    print(parser.segmentation(parser.readInputFile()))
-    """
-    main method for this project which creates the outputfile
-
-    output = open('outputText.xml', 'w+')
-    parser = Parser('inputText.txt')
+    output = open('outputText.xmk', 'w+')
     output.write('<file>\n')
     for segment in parser.segmentation(parser.readInputFile()):
-        vicar = Vicar('k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.',
-                      'k.A.', 'k.A.')
-        analyzer = SegmentAnalyzer(segment, vicar)
+        vicar = Vicar('k.A.','k.A.','k.A.','k.A.','k.A.','k.A.','k.A.',['k.A.'],
+                        ['k.A.'],['k.A.'],['k.A.'],['k.A.'],['k.A.'],'k.A.',
+                        'k.A.','k.A.','k.A.')
+        analyzer = SegmentAnalyzer(segmen, vicar)
         output.write(analyzer.createEntry())
     output.write('</file>')
     output.close
-"""
+    print(parser.segmentation(parser.readInputFile()))
+
 if __name__ == '__main__':                # call if module is called as main
     main()
