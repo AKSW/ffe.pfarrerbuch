@@ -28,8 +28,7 @@ to-do:
 
 import sys
 import getopt
-from segmentAnalyzer import SegmentAnalyzer
-from vicar import Vicar
+from writer import Writer
 import codecs
 
 
@@ -82,17 +81,10 @@ def main(argv):
             outputFile = a
 
     parser = Parser(inputFile)
-    output = open(outputFile, 'w+')
-    output.write('<file>\n')
-    for segment in parser.segmentation(parser.readInputFile()):
-        vicar = Vicar('k.A.','k.A.','k.A.','k.A.','k.A.','k.A.',
-                        'k.A.',['k.A.'],['k.A.'],['k.A.'],['k.A.'],
-                        ['k.A.'],['k.A.'],['k.A.'],'k.A.','k.A.',
-                        'k.A.')
-        analyzer = SegmentAnalyzer(segment, vicar)
-        output.write(analyzer.createEntry())
-    output.write('</file>')
-    output.close
+    writer = Writer()
+    writer.fromParser(parser)
+    # TODO implement dumping to stdout
+    writer.dumpToFile(outputFile)
 
 def usage():
     print("""
