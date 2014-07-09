@@ -9,13 +9,15 @@ class Writer:
 
     def fromParser(self, parser):
         self.parser = parser
+        i=0
         for segment in parser.segmentation(parser.readInputFile()):
-            vicar = Vicar('k.A.','k.A.','k.A.','k.A.','k.A.','k.A.',
+            vicar = Vicar(i,'k.A.','k.A.','k.A.','k.A.','k.A.','k.A.',
                             'k.A.',['k.A.'],['k.A.'],['k.A.'],['k.A.'],
                             ['k.A.'],['k.A.'],['k.A.'],'k.A.','k.A.',
                             'k.A.')
             analyzer = SegmentAnalyzer(segment, vicar)
             entry = analyzer.createEntry(self.root)
+            i=i+1
 
     def dumpToFile(self, outputFile):
         xmlString = ElementTree.tostring(self.root, encoding="unicode")

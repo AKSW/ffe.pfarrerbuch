@@ -28,6 +28,7 @@ class SegmentAnalyzer:
         self.analyze()
         #self.stripLines()
         entry = ElementTree.SubElement(root, 'vicar')
+        ElementTree.SubElement(entry, 'id').text = str(self.vicar.id)
         ElementTree.SubElement(entry, 'name').text = self.vicar.name.strip()
         ElementTree.SubElement(entry, 'ordination').text = self.vicar.ordination.strip()
         ElementTree.SubElement(entry, 'birthday').text = self.vicar.birthday.strip()
