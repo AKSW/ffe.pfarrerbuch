@@ -8,7 +8,9 @@ Author: Robert R.
 
 from vicar import Vicar
 from analyzer import Analyzer
-
+import xml.etree.ElementTree as ElementTree
+import datetime
+import dateutil.parser
 
 class SegmentAnalyzer:
 
@@ -24,150 +26,67 @@ class SegmentAnalyzer:
                 analyzer = Analyzer(line, self.vicar)
                 analyzer.analyze()
 
-    def stripLine(self, line):
-        if line[0] == ' ':
-            line[:1].replace(' ', '')
-        if line[-2:] == '\n':
-            line[-2:].raplace('\n', '')
-
-    def stripLines(self):
-        self.stripLine(self.vicar.name)
-        self.stripLine(self.vicar.ordination)
-        self.stripLine(self.vicar.birthday)
-        self.stripLine(self.vicar.obit)
-        self.stripLine(self.vicar.married)
-        self.stripLine(self.vicar.father)
-        self.stripLine(self.vicar.mother)
-        for sibling in self.vicar.siblings:
-            self.stripLine(sibling)
-        for offspring in self.vicar.offspring:
-            self.stripLine(offspring)
-        for vicar in self.vicar.vicars:
-            self.stripLine(vicar)
-        for pastor in self.vicar.pastors:
-            self.stripLine(pastor)
-        for institution in self.vicar.institutions:
-            self.stripLine(institution)
-        for teacher in self.vicar.teachers:
-            self.stripLine(teacher)
-        for education in self.vicar.education:
-            self.stripLine(education)
-        self.stripLine(self.vicar.misc)
-        self.stripLine(self.vicar.archive)
-        self.stripLine(self.vicar.literature)
-
-    def createEntry(self):
+    def createEntry(self, root):
         self.analyze()
-        self.stripLines()
-        output = (
-            '\t<vicar>\n' +
-            '\t\t<name>\n' +
-            '\t\t\t' + self.vicar.name + '\n' +
-            '\t\t</name>\n' +
-            '\t\t<ordination>\n' +
-            '\t\t\t' + self.vicar.ordination + '\n' +
-            '\t\t</ordination>\n' +
-            '\t\t<birthday>\n' +
-            '\t\t\t' + self.vicar.birthday + '\n' +
-            '\t\t</birthday>\n' +
-            '\t\t<obit>\n'
-            '\t\t\t' + self.vicar.obit + '\n' +
-            '\t\t</obit>\n' +
-            '\t\t<married>\n' +
-            '\t\t\t' + self.vicar.married + '\n' +
-            '\t\t</married>\n' +
-            '\t\t<father>\n' +
-            '\t\t\t' + self.vicar.father + '\n' +
-            '\t\t</father>\n' +
-            '\t\t<mother>\n' +
-            '\t\t\t' + self.vicar.mother + '\n' +
-            '\t\t</mother>\n')
-        if len(self.vicar.siblings) > 1:
+        #self.stripLines()
+        entry = ElementTree.SubElement(root, 'vicar')
+        ElementTree.SubElement(entry, 'id').text = str(self.vicar.id)
+        ElementTree.SubElement(entry, 'name').text = self.vicar.name.strip()
+        ordination = ElementTree.SubElement(entry, 'ordination')
+        if (self.vicar.ordination != 'k.A.'):
+            ordination.text = self.vicar.ordination.strip().split(',')[0]
+            if (len(self.vicar.ordination.strip().split(',')) == 2):
+                ElementTree.SubElement(ordination, 'date').text = self.parsedate(self.vicar.ordination.strip())
+        else:
+            ordination.text = 'k.A.'
+        birthday = ElementTree.SubElement(entry, 'birthday')
+        if (self.vicar.birthday != 'k.A.'):
+            birthday.text = self.vicar.birthday.strip().split(',')[0]
+            if (len(self.vicar.birthday.strip().split(',')) == 2):
+                ElementTree.SubElement(birthday, 'date').text = self.parsedate(self.vicar.birthday.strip())
+        else:
+            birthday.text = 'k.A.'
+        obit = ElementTree.SubElement(entry, 'obit')
+        if (self.vicar.obit != 'k.A.'):
+            obit.text = self.vicar.obit.strip().split(',')[0]
+            if (len(self.vicar.obit.strip().split(',')) == 2):
+                ElementTree.SubElement(obit, 'date').text = self.parsedate(self.vicar.obit.strip())
+        else:
+            obit.text = 'k.A.'
+        ElementTree.SubElement(entry, 'father').text = self.vicar.father.strip()
+        ElementTree.SubElement(entry, 'mother').text = self.vicar.mother.strip()
+        if len(self.vicar.siblings) > 0:
             for sibling in self.vicar.siblings:
-                output = output + (
-                '\t\t<sibling>\n' +
-                '\t\t\t' + sibling + '\n' +
-                '\t\t</sibling>\n')
-        else:
-            output = output + (
-            '\t\t<sibling>\n' +
-            '\t\t\t' + self.vicar.siblings[0] + '\n' +
-            '\t\t</sibling>\n')
-        if len(self.vicar.offspring) > 1:
+                ElementTree.SubElement(entry, 'sibling').text = sibling.strip()
+        if len(self.vicar.offspring) > 0:
             for offspring in self.vicar.offspring:
-                output = output + (
-                '\t\t<offspring>\n' +
-                '\t\t\t' + offspring + '\n' +
-                '\t\t</offspring>\n')
-        else:
-            output = output + (
-            '\t\t<offspring>\n' +
-            '\t\t\t' + self.vicar.offspring[0] + '\n' +
-            '\t\t</offspring>\n')
-        if len(self.vicar.vicars) > 1:
+                ElementTree.SubElement(entry, 'offspring').text = offspring.strip()
+        if len(self.vicar.vicars) > 0:
             for vicar in self.vicar.vicars:
-                output = output + (
-                '\t\t<vicar>\n' +
-                '\t\t\t' + vicar + '\n' +
-                '\t\t</vicar>\n')
-        else:
-            output = output + (
-            '\t\t<vicar>\n' +
-            '\t\t\t' + self.vicar.vicars[0] + '\n' +
-            '\t\t</vicar>\n')
-        if len(self.vicar.pastors) > 1:
+                ElementTree.SubElement(entry, 'vicar').text = vicar.strip()
+        if len(self.vicar.pastors) > 0:
             for pastor in self.vicar.pastors:
-                output = output + (
-                '\t\t<pastor>\n' +
-                '\t\t\t' + pastor + '\n' +
-                '\t\t</pastor>\n')
-        else:
-            output = output + (
-            '\t\t<pastor>\n' +
-            '\t\t\t' + self.vicar.pastors[0] + '\n' +
-            '\t\t</pastor>\n')
-        if len(self.vicar.institutions) > 1:
+                ElementTree.SubElement(entry, 'pastor').text = pastor.strip()
+        if len(self.vicar.institutions) > 0:
             for institution in self.vicar.institutions:
-                output = output + (
-                '\t\t<institution>\n' +
-                '\t\t\t' + institution + '\n' +
-                '\t\t</institution>\n')
-        else:
-            output = output + (
-            '\t\t<institution>\n' +
-            '\t\t\t' + self.vicar.institutions[0] + '\n' +
-            '\t\t</institution>\n')
-        if len(self.vicar.teachers) > 1:
+                ElementTree.SubElement(entry, 'institution').text = institution.strip()
+        if len(self.vicar.teachers) > 0:
             for teacher in self.vicar.teachers:
-                output = output + (
-                '\t\t<teacher>\n' +
-                '\t\t\t' + teacher + '\n' +
-                '\t\t</teacher>\n')
-        else:
-            output = output + (
-            '\t\t<teacher>\n' +
-            '\t\t\t' + self.vicar.teachers[0] + '\n' +
-            '\t\t</teacher>\n')
-        if len(self.vicar.education) > 1:
+                ElementTree.SubElement(entry, 'teacher').text = teacher.strip()
+        if len(self.vicar.education) > 0:
             for education in self.vicar.education:
-                output = output + (
-                '\t\t<education>\n' +
-                '\t\t\t' + education + '\n' +
-                '\t\t</education>\n')
+                ElementTree.SubElement(entry, 'education').text = education.strip()
+        ElementTree.SubElement(entry, 'misc').text = self.vicar.misc.strip()
+        ElementTree.SubElement(entry, 'archive').text = self.vicar.archive.strip()
+        ElementTree.SubElement(entry, 'literature').text = self.vicar.literature.strip()
+        return entry
+
+    def parsedate(self, text):
+        defaultDate = datetime.datetime(datetime.MINYEAR, 1, 1)
+        date = dateutil.parser.parse(text.replace('.','/'), default = defaultDate, fuzzy = True).strftime('%d.%m.%Y')
+        if ("01.01" in date[:5]):
+            return date[6:]
+        elif ("01" in date[:2]):
+            return date[3:]
         else:
-            output = output + (
-            '\t\t<education>\n' +
-            '\t\t\t' + self.vicar.education[0] + '\n' +
-            '\t\t</education>\n')
-        output = output + (
-        '\t\t<misc>\n' +
-        '\t\t\t' + self.vicar.misc + '\n' +
-        '\t\t</misc>\n' +
-        '\t\t<archive>\n' +
-        '\t\t\t' + self.vicar.archive + '\n' +
-        '\t\t</archive>\n' +
-        '\t\t<literature>\n' +
-        '\t\t\t' + self.vicar.literature + '\n' +
-        '\t\t</literature>\n'
-        '\t</vicar>\n')
-        return output
+            return date

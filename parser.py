@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -25,8 +26,9 @@ to-do:
     fix stripLine() in segmentAnalyzer
 """
 
-from segmentAnalyzer import SegmentAnalyzer
-from vicar import Vicar
+import sys
+import getopt
+from writer import Writer
 import codecs
 
 
@@ -65,20 +67,31 @@ class Parser:
                 segment.append(line)
         return segments
 
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv, "i:o:", ["input", "output"])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
 
-def main():
-    parser = Parser('input.txt')
-    output = open('outputText.xml', 'w+')
-    output.write('<file>\n')
-    for segment in parser.segmentation(parser.readInputFile()):
-        vicar = Vicar('k.A.','k.A.','k.A.','k.A.','k.A.','k.A.',
-                        'k.A.',['k.A.'],['k.A.'],['k.A.'],['k.A.'],
-                        ['k.A.'],['k.A.'],['k.A.'],'k.A.','k.A.',
-                        'k.A.')
-        analyzer = SegmentAnalyzer(segment, vicar)
-        output.write(analyzer.createEntry())
-    output.write('</file>')
-    output.close
+    for o, a in opts:
+        if o in ("-i", "--input"):
+            inputFile = a
+        elif o in ("-o", "--output"):
+            outputFile = a
+
+    parser = Parser(inputFile)
+    writer = Writer()
+    writer.fromParser(parser)
+    # TODO implement dumping to stdout
+    writer.dumpToFile(outputFile)
+
+def usage():
+    print("""
+Please use the following options:
+    -i  --input     The input file
+    -o  --output    The output file (optional). If not present, the output is written to stdout
+""")
 
 if __name__ == '__main__':                # call if module is called as main
-    main()
+    main(sys.argv[1:])

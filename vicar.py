@@ -7,6 +7,7 @@ Author: Robert R.
 
 
 class Vicar(object):
+    id = 0
     name = 'k.A.'
     ordination = 'k.A.'
     birthday = 'k.A.'
@@ -25,9 +26,10 @@ class Vicar(object):
     archive = 'k.A.'
     literature = 'k.A.'
 
-    def __init__(self, name, ordination, birthday, obit, married, father,
+    def __init__(self, id, name, ordination, birthday, obit, married, father,
                     mother, siblings, offspring, vicars, pastors, institutions,
                     teachers, education, misc, archive, literature):
+        self.id = id
         self.name = name                    # name of the vicar
         self.ordination = ordination        # ordination of the vicar
         self.birthday = birthday            # birthday of the vicar
