@@ -130,8 +130,7 @@ def main():                                        # main class (testing)
     analyzer = Analyzer(text)
     output = analyzer.analyze()
     print(analyzer.analyze())
-    vicar = Vicar('k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.', 'k.A.'
-                  'k.A.', 'k.A.', 'k.A.')
+    vicar = Vicar()
     print(vicar.birthday)
     print(vicar.obit)
 

@@ -26,6 +26,7 @@ class SegmentAnalyzer:
                 analyzer = Analyzer(line, self.vicar)
                 analyzer.analyze()
 
+    # Create the XML tree
     def createEntry(self, root):
         self.analyze()
 
@@ -34,57 +35,51 @@ class SegmentAnalyzer:
         entry = ElementTree.SubElement(root, 'vicar')
         ElementTree.SubElement(entry, 'id').text = str(self.vicar.id)
         ElementTree.SubElement(entry, 'name').text = self.vicar.name.strip()
-        if (self.vicar.ordination != 'k.A.'):
+        if (self.vicar.ordination != None):
             ordination = ElementTree.SubElement(entry, 'ordination')
-            ordination.text = self.vicar.ordination.strip().split(',')[0]
+            ElementTree.SubElement(ordination, 'place').text = self.vicar.ordination.strip().split(',')[0]
             if (len(self.vicar.ordination.strip().split(',')) == 2):
                 ElementTree.SubElement(ordination, 'date').text = self.parsedate(self.vicar.ordination.strip())
-        #else:
-        #    ordination.text = 'k.A.'
-        if (self.vicar.birthday != 'k.A.'):
+        if (self.vicar.birthday != None):
             birthday = ElementTree.SubElement(entry, 'birthday')
-            birthday.text = self.vicar.birthday.strip().split(',')[0]
+            ElementTree.SubElement(birthday, 'place').text = self.vicar.birthday.strip().split(',')[0]
             if (len(self.vicar.birthday.strip().split(',')) == 2):
                 ElementTree.SubElement(birthday, 'date').text = self.parsedate(self.vicar.birthday.strip())
-        #else:
-        #    birthday.text = 'k.A.'
-        if (self.vicar.obit != 'k.A.'):
+        if (self.vicar.obit != None):
             obit = ElementTree.SubElement(entry, 'obit')
-            obit.text = self.vicar.obit.strip().split(',')[0]
+            ElementTree.SubElement(obit, 'place').text = self.vicar.obit.strip().split(',')[0]
             if (len(self.vicar.obit.strip().split(',')) == 2):
                 ElementTree.SubElement(obit, 'date').text = self.parsedate(self.vicar.obit.strip())
-        #else:
-        #    obit.text = 'k.A.'
-        if (self.vicar.father != 'k.A.'):
+        if (self.vicar.father != None):
             ElementTree.SubElement(entry, 'father').text = self.vicar.father.strip()
-        if (self.vicar.mother != 'k.A.'):
+        if (self.vicar.mother != None):
             ElementTree.SubElement(entry, 'mother').text = self.vicar.mother.strip()
-        if len(self.vicar.siblings) > 0 and self.vicar.siblings[0] != 'k.A.':
+        if len(self.vicar.siblings) > 0:
             for sibling in self.vicar.siblings:
                 ElementTree.SubElement(entry, 'sibling').text = sibling.strip()
-        if len(self.vicar.offspring) > 0 and self.vicar.offspring[0] != 'k.A.':
+        if len(self.vicar.offspring) > 0:
             for offspring in self.vicar.offspring:
                 ElementTree.SubElement(entry, 'offspring').text = offspring.strip()
-        if len(self.vicar.vicars) > 0 and self.vicar.vicars[0] != 'k.A.':
+        if len(self.vicar.vicars) > 0:
             for vicar in self.vicar.vicars:
                 ElementTree.SubElement(entry, 'vicar').text = vicar.strip()
-        if len(self.vicar.pastors) > 0 and self.vicar.pastors[0] != 'k.A.':
+        if len(self.vicar.pastors) > 0:
             for pastor in self.vicar.pastors:
                 ElementTree.SubElement(entry, 'pastor').text = pastor.strip()
-        if len(self.vicar.institutions) > 0 and self.vicar.institutions[0] != 'k.A.':
+        if len(self.vicar.institutions) > 0:
             for institution in self.vicar.institutions:
                 ElementTree.SubElement(entry, 'institution').text = institution.strip()
-        if len(self.vicar.teachers) > 0 and self.vicar.teachers[0] != 'k.A.':
+        if len(self.vicar.teachers) > 0:
             for teacher in self.vicar.teachers:
                 ElementTree.SubElement(entry, 'teacher').text = teacher.strip()
-        if len(self.vicar.education) > 0 and self.vicar.education[0] != 'k.A.':
+        if len(self.vicar.education) > 0:
             for education in self.vicar.education:
                 ElementTree.SubElement(entry, 'education').text = education.strip()
-        if (self.vicar.misc != 'k.A.'):
+        if (self.vicar.misc != None):
             ElementTree.SubElement(entry, 'misc').text = self.vicar.misc.strip()
-        if (self.vicar.archive != 'k.A.'):
+        if (self.vicar.archive != None):
             ElementTree.SubElement(entry, 'archive').text = self.vicar.archive.strip()
-        if (self.vicar.literature != 'k.A.'):
+        if (self.vicar.literature != None):
             ElementTree.SubElement(entry, 'literature').text = self.vicar.literature.strip()
         return entry
 

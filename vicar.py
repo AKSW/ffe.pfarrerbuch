@@ -8,42 +8,23 @@ Author: Robert R.
 
 class Vicar(object):
     id = 0
-    name = 'k.A.'
-    ordination = 'k.A.'
-    birthday = 'k.A.'
-    obit = 'k.A.'
-    married = 'k.A.'
-    father = 'k.A.'
-    mother = 'k.A.'
-    siblings = ['k.A.']
-    offspring = ['k.A.']
-    vicars = ['k.A.']
-    pastors = ['k.A.']
-    institutions = ['k.A.']
-    teachers = ['k.A.']
-    education = ['k.A.']
-    misc = 'k.A.'
-    archive = 'k.A.'
-    literature = 'k.A.'
+    name = None             # name of the vicar
+    ordination = None       # ordination of the vicar
+    birthday = None         # birthday of the vicar
+    obit = None             # obit of the vicar
+    married = None          # Wife / Husband of the vicar
+    father = None           # father of the vicar
+    mother = None           # mother of the vicar
+    siblings = []           # siblings of the vicar
+    offspring = []          # the offspring of the vicar
+    vicars = []             # vicars of the vicar
+    pastors = []            # pastors of the vicar
+    institutions = []       # institutions of the vicar
+    teachers = []           # teachers of the vicar
+    education = []          # the education of the vicar
+    misc = None             # diverse annotations
+    archive = None          # archive sources
+    literature = None       # used literature
 
-    def __init__(self, id, name, ordination, birthday, obit, married, father,
-                    mother, siblings, offspring, vicars, pastors, institutions,
-                    teachers, education, misc, archive, literature):
+    def __init__(self, id):
         self.id = id
-        self.name = name                    # name of the vicar
-        self.ordination = ordination        # ordination of the vicar
-        self.birthday = birthday            # birthday of the vicar
-        self.obit = obit                    # obit of the vicar
-        self.married = married              # Wife / Husband of the vicar
-        self.father = father                # father of the vicar
-        self.mother = mother                # mother of the vicar
-        self.siblings = siblings            # siblings of the vicar
-        self.offspring = offspring          # the offspring of the vicar
-        self.vicars = vicars                # vicars of the vicar
-        self.pastors = pastors              # pastors of the vicar
-        self.institutions = institutions    # institutions of the vicar
-        self.teachers = teachers            # teachers of the vicar
-        self.education = education          # the education of the vicar
-        self.misc = misc                    # diverse annotations
-        self.archive = archive              # archive sources
-        self.literature = literature        # used literature
