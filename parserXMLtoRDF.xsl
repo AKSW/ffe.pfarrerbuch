@@ -100,28 +100,13 @@
       <!-- Dates -->
       <!--//
       <xsl:call-template name="date">
-        <xsl:with-param name="year" select="column[@name='Geburtsjahr']" />
-        <xsl:with-param name="day" select="column[@name='Geburtstag']" />
-        <xsl:with-param name="property">hp:birthDate</xsl:with-param>
-      </xsl:call-template>
-      <xsl:call-template name="date">
         <xsl:with-param name="day" select="column[@name='Tauftag']" />
         <xsl:with-param name="property">hp:dayOfBaptism</xsl:with-param>
-      </xsl:call-template>
-      <xsl:call-template name="date">
-        <xsl:with-param name="year" select="column[@name='Ordinationsjahr']" />
-        <xsl:with-param name="day" select="column[@name='Ordinationstag']" />
-        <xsl:with-param name="property">hp:dateOfOrdination</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="date">
         <xsl:with-param name="year" select="column[@name='Emeritierungsjahr']" />
         <xsl:with-param name="day" select="column[@name='Emeritierungstag']" />
         <xsl:with-param name="property">hp:dateOfRetirement</xsl:with-param>
-      </xsl:call-template>
-      <xsl:call-template name="date">
-        <xsl:with-param name="year" select="column[@name='Todesjahr']" />
-        <xsl:with-param name="day" select="column[@name='Todestag']" />
-        <xsl:with-param name="property">hp:dateOfDeath</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="date">
         <xsl:with-param name="day" select="column[@name='Begraebnistag']" />
@@ -140,31 +125,12 @@
         <xsl:with-param name="property">hp:placeOfRetirement</xsl:with-param>
       </xsl:call-template>
       <xsl:call-template name="place">
-        <xsl:with-param name="place" select="column[@name='Ordinationssort_Key']" />
-        <xsl:with-param name="property">hp:placeOfOrdination</xsl:with-param>
-      </xsl:call-template>
-      <xsl:call-template name="place">
         <xsl:with-param name="place" select="column[@name='Taufort_Key']" />
         <xsl:with-param name="property">hp:placeOfBaptism</xsl:with-param>
-      </xsl:call-template>
-      <xsl:call-template name="place">
-        <xsl:with-param name="place" select="column[@name='Todesort_Key']" />
-        <xsl:with-param name="property">hp:placeOfDeath</xsl:with-param>
-      </xsl:call-template>
-      <xsl:call-template name="place">
-        <xsl:with-param name="place" select="column[@name='Geburtsort_Key']" />
-        <xsl:with-param name="property">hp:birthPlace</xsl:with-param>
       </xsl:call-template>
   //-->
     </xsl:element>
   </xsl:template>
-
-  <!-- template for position table -->
-  <xsl:template match="pastor">
-    <xsl:element name="hp:Position">
-    </xsl:element>
-  </xsl:template>
-
 
   <xsl:template name="place">
     <xsl:param name="place"/>
