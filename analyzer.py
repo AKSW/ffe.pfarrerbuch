@@ -43,56 +43,56 @@ class Analyzer:
         if 'Fr:' == self.inputLine[:3] and len(self.inputLine) > 7:
             self.vicar.siblings[:] = self.inputLine[4:].split(',')
             for i, sibling in enumerate(self.vicar.siblings):
-                if ")" in sibling and not "(" in sibling:
-                    self.vicar.siblings[i-1] = self.vicar.siblings[i-1] + ', ' + sibling
+                if ")" in sibling and "(" not in sibling:
+                    self.vicar.siblings[i - 1] = self.vicar.siblings[i - 1] + ', ' + sibling
                     self.vicar.siblings.remove(sibling)
 
     def parseOffspring(self):
         if 'Fi:' == self.inputLine[:3] and len(self.inputLine) > 7:
             self.vicar.offspring[:] = self.inputLine[4:].split(',')
             for i, offspring in enumerate(self.vicar.offspring):
-                if ")" in offspring and not "(" in offspring:
-                    self.vicar.offspring[i-1] = self.vicar.offspring[i-1] + ', ' + offspring
+                if ")" in offspring and "(" not in offspring:
+                    self.vicar.offspring[i - 1] = self.vicar.offspring[i - 1] + ', ' + offspring
                     self.vicar.offspring.remove(offspring)
 
     def parseVicars(self):
         if 'V:' == self.inputLine[:2] and len(self.inputLine) > 6:
             self.vicar.vicars[:] = self.inputLine[3:].split(',')
             for i, vicar in enumerate(self.vicar.vicars):
-                if ")" in vicar and not "(" in vicar:
-                    self.vicar.vicars[i-1] = self.vicar.vicars[i-1] + ', ' + vicar
+                if ")" in vicar and "(" not in vicar:
+                    self.vicar.vicars[i - 1] = self.vicar.vicars[i - 1] + ', ' + vicar
                     self.vicar.vicars.remove(vicar)
 
     def parsePastors(self):
         if 'VDM:' == self.inputLine[:4] and len(self.inputLine) > 8:
             self.vicar.pastors[:] = self.inputLine[5:].split(',')
             for i, pastor in enumerate(self.vicar.pastors):
-                if ")" in pastor and not "(" in pastor:
-                    self.vicar.pastors[i-1] = self.vicar.pastors[i-1] + ', ' + pastor
+                if ")" in pastor and "(" not in pastor:
+                    self.vicar.pastors[i - 1] = self.vicar.pastors[i - 1] + ', ' + pastor
                     self.vicar.pastors.remove(pastor)
 
     def parseInstitutions(self):
         if 'S:' == self.inputLine[:2] and len(self.inputLine) > 6:
             self.vicar.institutions[:] = self.inputLine[3:].split(',')
             for i, institution in enumerate(self.vicar.institutions):
-                if ")" in institution and not "(" in institution:
-                    self.vicar.institutions[i-1] = self.vicar.institutions[i-1] + ', ' + institution
+                if ")" in institution and "(" not in institution:
+                    self.vicar.institutions[i - 1] = self.vicar.institutions[i - 1] + ', ' + institution
                     self.vicar.institutions.remove(institution)
 
     def parseTeachers(self):
         if 'LM:' == self.inputLine[:3] and len(self.inputLine) > 7:
             self.vicar.teachers[:] = self.inputLine[4:].split(',')
             for i, teacher in enumerate(self.vicar.teachers):
-                if ")" in teacher and not "(" in teacher:
-                    self.vicar.teachers[i-1] = self.vicar.teachers[i-1] + ', ' + teacher
+                if ")" in teacher and "(" not in teacher:
+                    self.vicar.teachers[i - 1] = self.vicar.teachers[i - 1] + ', ' + teacher
                     self.vicar.teachers.remove(teacher)
 
     def parseEducation(self):
         if 'St:' == self.inputLine[:3] and len(self.inputLine) > 7:
             self.vicar.education[:] = self.inputLine[4:].split(',')
             for i, education in enumerate(self.vicar.education):
-                if ")" in education and not "(" in education:
-                    self.vicar.education[i-1] = self.vicar.education[i-1] + ', ' + education
+                if ")" in education and "(" not in education:
+                    self.vicar.education[i - 1] = self.vicar.education[i - 1] + ', ' + education
                     self.vicar.education.remove(education)
 
     def parseMisc(self):
@@ -125,10 +125,11 @@ class Analyzer:
         self.parseTeachers()
         self.parseVicars()
 
+
 def main():                                        # main class (testing)
     text = 'T. Konrad, * Bucha b. Jena 21.08.1872 '
     analyzer = Analyzer(text)
-    output = analyzer.analyze()
+    analyzer.analyze()
     print(analyzer.analyze())
     vicar = Vicar()
     print(vicar.birthday)

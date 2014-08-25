@@ -19,17 +19,16 @@ format convention of the raw-text:
     - first line should be the name / entry of the first vicar
     - each entry need to be seperated with a new line
 
-current bugs:
-    - ?
+bugs:
+    list if any are found
 
 to-do:
-    fix stripLine() in segmentAnalyzer
+    add date inaccuracy in analyzeDate in segmentAnalyzer
 """
 
 import sys
 import getopt
 from writer import Writer
-import codecs
 
 
 class Parser:
@@ -67,6 +66,7 @@ class Parser:
                 segment.append(line)
         return segments
 
+
 def main(argv):
     try:
         opts, args = getopt.getopt(argv, "i:o:", ["input", "output"])
@@ -80,11 +80,12 @@ def main(argv):
         elif o in ("-o", "--output"):
             outputFile = a
 
-    parser = Parser(inputFile)
+    Parser(inputFile)
     writer = Writer()
-    writer.fromParser(parser)
+    writer.fromParser(outputFile)
     # TODO implement dumping to stdout
-    writer.dumpToFile(outputFile)
+    writer.dumpToFile("output.xml")
+
 
 def usage():
     print("""

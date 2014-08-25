@@ -3,18 +3,19 @@ from vicar import Vicar
 from segmentAnalyzer import SegmentAnalyzer
 import xml.dom.minidom as minidom
 
+
 class Writer:
     def __init__(self):
         self.root = ElementTree.Element('file')
 
     def fromParser(self, parser):
         self.parser = parser
-        i=0
+        i = 0
         for segment in parser.segmentation(parser.readInputFile()):
             vicar = Vicar(i)
             analyzer = SegmentAnalyzer(segment, vicar)
-            entry = analyzer.createEntry(self.root)
-            i=i+1
+            analyzer.createEntry(self.root)
+            i = i + 1
 
     def dumpToFile(self, outputFile):
         xmlString = ElementTree.tostring(self.root, encoding="unicode")
