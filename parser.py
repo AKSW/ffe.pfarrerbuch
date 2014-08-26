@@ -80,11 +80,11 @@ def main(argv):
         elif o in ("-o", "--output"):
             outputFile = a
 
-    Parser(inputFile)
+    parser = Parser(inputFile)
     writer = Writer()
-    writer.fromParser(outputFile)
+    writer.fromParser(parser)
     # TODO implement dumping to stdout
-    writer.dumpToFile("output.xml")
+    writer.dumpToFile(outputFile)
 
 
 def usage():
