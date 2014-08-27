@@ -197,11 +197,14 @@ class SegmentAnalyzer:
                     ElementTree.SubElement(entry, 'vicar').text = vicar.strip()
         del(self.vicar.vicars[:])
 
+        eventId = 0;
         #Pastors
         if len(self.vicar.pastors) > 0:
             for pastor in self.vicar.pastors:
                 if ('(' in pastor):
                     pastorEntry = ElementTree.SubElement(entry, 'pastor')
+                    pastorEntry.set('id', str(self.vicar.id) + '-' + str(eventId))
+                    eventId += 1
                     ElementTree.SubElement(pastorEntry, 'name').text = pastor[:pastor.find('(')].strip()
                     pastorData = self.analyzeDate(pastor)
                     if (len(pastorData[0]) > 3):
@@ -217,6 +220,8 @@ class SegmentAnalyzer:
             for institution in self.vicar.institutions:
                 if ('(' in institution):
                     institutionEntry = ElementTree.SubElement(entry, 'institution')
+                    institutionEntry.set('id', str(self.vicar.id) + '-' + str(eventId))
+                    eventId += 1
                     ElementTree.SubElement(institutionEntry, 'name').text = institution[:institution.find('(')].strip()
                     institutionData = self.analyzeDate(institution)
                     if (len(institutionData[0]) > 3):
@@ -232,6 +237,8 @@ class SegmentAnalyzer:
             for teacher in self.vicar.teachers:
                 if ('(' in teacher):
                     teacherEntry = ElementTree.SubElement(entry, 'teacher')
+                    teacherEntry.set('id', str(self.vicar.id) + '-' + str(eventId))
+                    eventId += 1
                     ElementTree.SubElement(teacherEntry, 'name').text = teacher[:teacher.find('(')].strip()
                     teacherData = self.analyzeDate(teacher)
                     if (len(teacherData[0]) > 3):
@@ -247,6 +254,8 @@ class SegmentAnalyzer:
             for education in self.vicar.education:
                 if ('(' in education):
                     educationEntry = ElementTree.SubElement(entry, 'education')
+                    educationEntry.set('id', str(self.vicar.id) + '-' + str(eventId))
+                    eventId += 1
                     ElementTree.SubElement(educationEntry, 'name').text = education[:education.find('(')].strip()
                     educationData = self.analyzeDate(education)
                     if (len(educationData[0]) > 3):

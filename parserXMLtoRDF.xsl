@@ -208,64 +208,52 @@
 
     <xsl:template match="education" mode="reification">
         <xsl:param name="person"/>
-        <xsl:variable name="placeUriName">
-            <xsl:call-template name="uriName">
-                <xsl:with-param name="name" select="name" />
-            </xsl:call-template>
-        </xsl:variable>
         <xsl:variable name="schoolUri">
             <xsl:call-template name="schoolUri">
                 <xsl:with-param name="place" select="name" />
             </xsl:call-template>
         </xsl:variable>
         <xsl:call-template name="event">
-            <xsl:with-param name="eventUri">&attendingschool;<xsl:value-of select="$placeUriName"/>-TODO</xsl:with-param>
+            <xsl:with-param name="eventUri">&attendingschool;<xsl:value-of select="@id"/></xsl:with-param>
             <xsl:with-param name="subjectUri" select="$person" />
             <xsl:with-param name="predicateUri">&hp;attendedSchool</xsl:with-param>
             <xsl:with-param name="objectUri" select="$schoolUri" />
             <xsl:with-param name="date" select="date"/>
+            <xsl:with-param name="label"><xsl:value-of select="name"/> (<xsl:value-of select="date"/>)</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="teacher" mode="reification">
         <xsl:param name="person"/>
-        <xsl:variable name="placeUriName">
-            <xsl:call-template name="uriName">
-                <xsl:with-param name="name" select="name" />
-            </xsl:call-template>
-        </xsl:variable>
         <xsl:variable name="schoolUri">
             <xsl:call-template name="schoolUri">
                 <xsl:with-param name="place" select="name" />
             </xsl:call-template>
         </xsl:variable>
         <xsl:call-template name="event">
-            <xsl:with-param name="eventUri">&staffing;<xsl:value-of select="$placeUriName"/>-TODO</xsl:with-param>
+            <xsl:with-param name="eventUri">&staffing;<xsl:value-of select="@id"/></xsl:with-param>
             <xsl:with-param name="subjectUri" select="$person" />
             <xsl:with-param name="predicateUri">&hp;hasPosition</xsl:with-param>
             <xsl:with-param name="objectUri" select="$schoolUri" />
             <xsl:with-param name="date" select="date"/>
+            <xsl:with-param name="label"><xsl:value-of select="name"/> (<xsl:value-of select="date"/>)</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template match="pastor|institution" mode="reification">
         <xsl:param name="person"/>
-        <xsl:variable name="placeUriName">
-            <xsl:call-template name="uriName">
-                <xsl:with-param name="name" select="name" />
-            </xsl:call-template>
-        </xsl:variable>
         <xsl:variable name="positionUri">
             <xsl:call-template name="positionUri">
                 <xsl:with-param name="place" select="name" />
             </xsl:call-template>
         </xsl:variable>
         <xsl:call-template name="event">
-            <xsl:with-param name="eventUri">&staffing;<xsl:value-of select="$placeUriName"/>-TODO</xsl:with-param>
+            <xsl:with-param name="eventUri">&staffing;<xsl:value-of select="@id"/></xsl:with-param>
             <xsl:with-param name="subjectUri" select="$person" />
             <xsl:with-param name="predicateUri">&hp;hasPosition</xsl:with-param>
             <xsl:with-param name="objectUri" select="$positionUri" />
             <xsl:with-param name="date" select="date"/>
+            <xsl:with-param name="label"><xsl:value-of select="name"/> (<xsl:value-of select="date"/>)</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
 
@@ -328,6 +316,7 @@
         <xsl:param name="predicateUri"/>
         <xsl:param name="objectUri"/>
         <xsl:param name="date"/>
+        <xsl:param name="label"/>
         <xsl:element name="hp:Event">
             <xsl:attribute name="rdf:about"><xsl:value-of select="$eventUri"/></xsl:attribute>
             <xsl:call-template name="objectProperty">
@@ -347,6 +336,9 @@
             </xsl:if>
             <xsl:if test="str:tokenize($date,'-')[2] != ''">
                 <xsl:element name="hp:end"><xsl:value-of select="str:tokenize($date,'-')[2]"/></xsl:element>
+            </xsl:if>
+            <xsl:if test="$label != ''">
+                <xsl:element name="rdfs:label"><xsl:value-of select="$label"/></xsl:element>
             </xsl:if>
         </xsl:element>
     </xsl:template>
