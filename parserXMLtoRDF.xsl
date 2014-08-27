@@ -51,7 +51,7 @@
     <xsl:template match="vicar">
         <xsl:element name="foaf:Person">
             <!-- Anmerkung: es gibt keine Tauf-, Emeritierungs- und Begräbnisangaben -->
-            <!-- attributes -->
+            <!-- Attributes -->
             <xsl:apply-templates select="id" />
             <!--<xsl:attribute name="rdfs:label">Name und Lebensdaten</xsl:attribute>-->
             <xsl:if test="birthday/date">
@@ -64,7 +64,7 @@
                 <xsl:attribute name="hp:dateOfDeath"><xsl:value-of select="obit/date" /></xsl:attribute>
             </xsl:if>
 
-            <!-- elements -->
+            <!-- Elements -->
             <xsl:apply-templates select="name" />
             <xsl:element name="hp:isPastor"><xsl:attribute name="rdf:datatype">&xsd;boolean</xsl:attribute>true</xsl:element>
 
@@ -91,12 +91,14 @@
                 <xsl:with-param name="gender">female</xsl:with-param>
             </xsl:apply-templates>
 
+            <!-- Education and Staffing -->
             <xsl:apply-templates select="education" mode="property" /> <!-- St -->
             <xsl:apply-templates select="teacher" mode="property" /> <!-- LM -->
             <!-- V scheint nie angegeben zu sein -->
             <xsl:apply-templates select="pastor" mode="property" /> <!-- VDM -->
             <xsl:apply-templates select="institution" mode="property" /> <!-- S -->
 
+            <!-- Other -->
             <xsl:if test="misc">
                 <xsl:element name="rdfs:comment"><xsl:value-of select="misc" /></xsl:element>
             </xsl:if>
@@ -106,6 +108,7 @@
         </xsl:element>
         <!-- end of foaf:Person -->
 
+        <!-- Reification Resources -->
         <xsl:apply-templates select="education" mode="reification"> <!-- St -->
             <xsl:with-param name="person">&person;<xsl:value-of select="id" /></xsl:with-param>
         </xsl:apply-templates>
@@ -119,7 +122,6 @@
         <xsl:apply-templates select="institution" mode="reification"> <!-- S -->
             <xsl:with-param name="person">&person;<xsl:value-of select="id" /></xsl:with-param>
         </xsl:apply-templates>
-
     </xsl:template>
 
     <xsl:template match="id">
@@ -150,23 +152,6 @@
         </xsl:element>
     </xsl:template>
 
-
-    <xsl:template name="place">
-        <xsl:param name="place"/>
-        <xsl:param name="property"/>
-        <xsl:if test="$place != ''">
-            <xsl:element name="{$property}">
-                <xsl:element name="rdf:Description">
-                    <xsl:attribute name="rdf:about">
-                        <xsl:call-template name="placeUri">
-                            <xsl:with-param name="place" select="$place" />
-                        </xsl:call-template>
-                    </xsl:attribute>
-                </xsl:element>
-            </xsl:element>
-        </xsl:if>
-    </xsl:template>
-
     <!--//
         The modes "property" and "reification" are used for the nodes "education", "pastor", "teacher" and "institution".
         They were introduced to distinugish between the creation of the plain property and the reification resources.
@@ -189,6 +174,7 @@
             </xsl:call-template>
         </xsl:variable>
         <xsl:call-template name="objectProperty">
+            <xsl:with-param name="type">hp:School</xsl:with-param>
             <xsl:with-param name="predicate">hp:attendedSchool</xsl:with-param>
             <xsl:with-param name="objectUri" select="$schoolUri" />
         </xsl:call-template>
@@ -201,6 +187,7 @@
             </xsl:call-template>
         </xsl:variable>
         <xsl:call-template name="objectProperty">
+            <xsl:with-param name="type">hp:School</xsl:with-param>
             <xsl:with-param name="predicate">hp:hasPosition</xsl:with-param>
             <xsl:with-param name="objectUri" select="$schoolUri" />
         </xsl:call-template>
@@ -213,6 +200,7 @@
             </xsl:call-template>
         </xsl:variable>
         <xsl:call-template name="objectProperty">
+            <xsl:with-param name="type">hp:Position</xsl:with-param>
             <xsl:with-param name="predicate">hp:hasPosition</xsl:with-param>
             <xsl:with-param name="objectUri" select="$positionUri" />
         </xsl:call-template>
@@ -281,40 +269,6 @@
         </xsl:call-template>
     </xsl:template>
 
-    <xsl:template name="event">
-        <xsl:param name="eventUri"/>
-        <xsl:param name="subjectUri"/>
-        <xsl:param name="predicateUri"/>
-        <xsl:param name="objectUri"/>
-        <xsl:param name="date"/>
-        <xsl:element name="hp:Event">
-            <xsl:attribute name="rdf:about"><xsl:value-of select="$eventUri"/></xsl:attribute>
-            <xsl:call-template name="objectProperty">
-                <xsl:with-param name="predicate">rdf:subject</xsl:with-param>
-                <xsl:with-param name="objectUri" select="$subjectUri" />
-            </xsl:call-template>
-            <xsl:call-template name="objectProperty">
-                <xsl:with-param name="predicate">rdf:predicate</xsl:with-param>
-                <xsl:with-param name="objectUri" select="$predicateUri" />
-            </xsl:call-template>
-            <xsl:call-template name="objectProperty">
-                <xsl:with-param name="predicate">rdf:object</xsl:with-param>
-                <xsl:with-param name="objectUri" select="$objectUri" />
-            </xsl:call-template>
-            <!--//
-            <xsl:element name="rdf:subject"><xsl:value-of select="$subjectUri"/></xsl:element>
-            <xsl:element name="rdf:predicate"><xsl:value-of select="$predicateUri"/></xsl:element>
-            <xsl:element name="rdf:object"><xsl:value-of select="$objectUri"/></xsl:element>
-            //-->
-            <xsl:if test="str:tokenize($date,'-')[1] != ''">
-                <xsl:element name="hp:start"><xsl:value-of select="str:tokenize($date,'-')[1]"/></xsl:element>
-            </xsl:if>
-            <xsl:if test="str:tokenize($date,'-')[2] != ''">
-                <xsl:element name="hp:end"><xsl:value-of select="str:tokenize($date,'-')[2]"/></xsl:element>
-            </xsl:if>
-        </xsl:element>
-    </xsl:template>
-
     <xsl:template match="father|mother">
         <xsl:param name="child"/>
         <xsl:param name="gender"/>
@@ -325,6 +279,7 @@
         </xsl:call-template>
     </xsl:template>
 
+    <!-- Specific Helper Templates -->
     <xsl:template name="parent">
         <xsl:param name="child"/>
         <xsl:param name="parent"/>
@@ -351,25 +306,49 @@
         </xsl:element>
     </xsl:template>
 
-    <!-- Helper templates -->
-    <xsl:template name="string-replace-all">
-        <xsl:param name="text" />
-        <xsl:param name="replace" />
-        <xsl:param name="by" />
-        <xsl:choose>
-            <xsl:when test="contains($text, $replace)">
-                <xsl:value-of select="substring-before($text,$replace)" />
-                <xsl:value-of select="$by" />
-                <xsl:call-template name="string-replace-all">
-                    <xsl:with-param name="text" select="substring-after($text,$replace)" />
-                    <xsl:with-param name="replace" select="$replace" />
-                    <xsl:with-param name="by" select="$by" />
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="$text" />
-            </xsl:otherwise>
-        </xsl:choose>
+    <xsl:template name="place">
+        <xsl:param name="place"/>
+        <xsl:param name="property"/>
+        <xsl:if test="$place != ''">
+            <xsl:element name="{$property}">
+                <xsl:element name="rdf:Description">
+                    <xsl:attribute name="rdf:about">
+                        <xsl:call-template name="placeUri">
+                            <xsl:with-param name="place" select="$place" />
+                        </xsl:call-template>
+                    </xsl:attribute>
+                </xsl:element>
+            </xsl:element>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="event">
+        <xsl:param name="eventUri"/>
+        <xsl:param name="subjectUri"/>
+        <xsl:param name="predicateUri"/>
+        <xsl:param name="objectUri"/>
+        <xsl:param name="date"/>
+        <xsl:element name="hp:Event">
+            <xsl:attribute name="rdf:about"><xsl:value-of select="$eventUri"/></xsl:attribute>
+            <xsl:call-template name="objectProperty">
+                <xsl:with-param name="predicate">rdf:subject</xsl:with-param>
+                <xsl:with-param name="objectUri" select="$subjectUri" />
+            </xsl:call-template>
+            <xsl:call-template name="objectProperty">
+                <xsl:with-param name="predicate">rdf:predicate</xsl:with-param>
+                <xsl:with-param name="objectUri" select="$predicateUri" />
+            </xsl:call-template>
+            <xsl:call-template name="objectProperty">
+                <xsl:with-param name="predicate">rdf:object</xsl:with-param>
+                <xsl:with-param name="objectUri" select="$objectUri" />
+            </xsl:call-template>
+            <xsl:if test="str:tokenize($date,'-')[1] != ''">
+                <xsl:element name="hp:start"><xsl:value-of select="str:tokenize($date,'-')[1]"/></xsl:element>
+            </xsl:if>
+            <xsl:if test="str:tokenize($date,'-')[2] != ''">
+                <xsl:element name="hp:end"><xsl:value-of select="str:tokenize($date,'-')[2]"/></xsl:element>
+            </xsl:if>
+        </xsl:element>
     </xsl:template>
 
     <xsl:template name="placeUri">
@@ -396,6 +375,27 @@
         </xsl:call-template>
     </xsl:template>
 
+    <!-- Generic Helper Templates -->
+    <xsl:template name="string-replace-all">
+        <xsl:param name="text" />
+        <xsl:param name="replace" />
+        <xsl:param name="by" />
+        <xsl:choose>
+            <xsl:when test="contains($text, $replace)">
+                <xsl:value-of select="substring-before($text,$replace)" />
+                <xsl:value-of select="$by" />
+                <xsl:call-template name="string-replace-all">
+                    <xsl:with-param name="text" select="substring-after($text,$replace)" />
+                    <xsl:with-param name="replace" select="$replace" />
+                    <xsl:with-param name="by" select="$by" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$text" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:template name="uriName">
         <xsl:param name="name" />
         <xsl:variable name="noSpace">
@@ -413,10 +413,21 @@
     </xsl:template>
 
     <xsl:template name="objectProperty">
+        <xsl:param name="type"/>
         <xsl:param name="predicate"/>
         <xsl:param name="objectUri"/>
         <xsl:element name="{$predicate}">
-            <xsl:element name="rdf:Description">
+            <xsl:variable name="elementName">
+                <xsl:choose>
+                    <xsl:when test="$type">
+                        <xsl:value-of select="$type"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:text>rdf:Description</xsl:text>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:element name="{$elementName}">
                 <xsl:attribute name="rdf:about"><xsl:value-of select="$objectUri"/></xsl:attribute>
             </xsl:element>
         </xsl:element>
