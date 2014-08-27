@@ -3,7 +3,6 @@ from vicar import Vicar
 from segmentAnalyzer import SegmentAnalyzer
 import xml.dom.minidom as minidom
 
-
 class Writer:
     def __init__(self):
         self.root = ElementTree.Element('file')
@@ -13,6 +12,7 @@ class Writer:
         i = 0
         for segment in parser.segmentation(parser.readInputFile()):
             vicar = Vicar(i)
+            vicar.rawData = segment
             analyzer = SegmentAnalyzer(segment, vicar)
             analyzer.createEntry(self.root)
             i = i + 1
@@ -25,4 +25,3 @@ class Writer:
         output.write(prettyString)
         output.close
         #tree.write(outputFile)
-

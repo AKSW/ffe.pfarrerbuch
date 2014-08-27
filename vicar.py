@@ -25,6 +25,7 @@ class Vicar(object):
     misc = None             # diverse annotations
     archive = None          # archive sources
     literature = None       # used literature
+    rawData = []          # raw entry of the vicar
 
     def __init__(self, id):
         self.id = id
