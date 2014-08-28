@@ -207,7 +207,7 @@ class SegmentAnalyzer:
                 date = self.parsedate(self.vicar.ordination.strip())
                 if (date[1] is not '0' and date[0] is not '0'):
                     ElementTree.SubElement(ordination, 'date').text = date[0].strip()
-                    ElementTree.SubElement(ordination, 'inaccuracy').text = date[1].strip()
+                    ordination.set('inaccuracy', str(date[1].strip()))
                 elif (date[0] is not '0'):
                     ElementTree.SubElement(ordination, 'date').text = date[0]
 
@@ -219,7 +219,7 @@ class SegmentAnalyzer:
                 date = self.parsedate(self.vicar.birthday.strip())
                 if (date[1] is not '0' and date[0] is not '0'):
                     ElementTree.SubElement(birthday, 'date').text = date[0].strip()
-                    ElementTree.SubElement(birthday, 'inaccuracy').text = date[1].strip()
+                    birthday.set('inaccuracy', str(date[1].strip()))
                 elif (date[0] is not '0'):
                     ElementTree.SubElement(birthday, 'date').text = date[0]
 
@@ -231,7 +231,7 @@ class SegmentAnalyzer:
                 date = self.parsedate(self.vicar.obit.strip())
                 if (date[1] is not '0' and date[0] is not '0'):
                     ElementTree.SubElement(obit, 'date').text = date[0].strip()
-                    ElementTree.SubElement(obit, 'inaccuracy').text = date[1].strip()
+                    obit.set('inaccuracy', str(date[1].strip()))
                 elif (date[0] is not '0'):
                     ElementTree.SubElement(obit, 'date').text = date[0]
 
@@ -253,7 +253,7 @@ class SegmentAnalyzer:
                     if (siblingData[0] is not '0'):
                         if (len(siblingData[1]) > 3):
                             ElementTree.SubElement(siblingEntry, 'date').text = siblingData[1].strip()
-                            ElementTree.SubElement(siblingEntry, 'inaccuracy').text = siblingData[0].strip()
+                            siblingEntry.set('inaccuracy', str(siblingData[0].strip()))
                     else:
                         if (len(siblingData[1]) > 3):
                             ElementTree.SubElement(siblingEntry, 'date').text = siblingData[1].strip()
@@ -273,7 +273,7 @@ class SegmentAnalyzer:
                     if (offspringData[0] is not '0'):
                         if (len(offspringData[1]) > 3):
                             ElementTree.SubElement(offspringEntry, 'date').text = offspringData[1].strip()
-                            ElementTree.SubElement(offspringEntry, 'inaccuracy').text = offspringData[0].strip()
+                            offspringEntry.set('inaccuracy', str(offspringData[0].strip()))
                     else:
                         if (len(offspringData[1]) > 3):
                             ElementTree.SubElement(offspringEntry, 'date').text = offspringData[1].strip()
@@ -293,7 +293,7 @@ class SegmentAnalyzer:
                     if (vicarData[0] is not '0'):
                         if (len(vicarData[1]) > 3):
                             ElementTree.SubElement(vicarEntry, 'date').text = vicarData[1].strip()
-                            ElementTree.SubElement(vicarEntry, 'inaccuracy').text = vicarData[0].strip()
+                            vicarEntry.set('inaccuracy', str(vicarData[0].strip()))
                     else:
                         if (len(vicarData[1]) > 3):
                             ElementTree.SubElement(vicarEntry, 'date').text = vicarData[1].strip()
@@ -316,7 +316,7 @@ class SegmentAnalyzer:
                     if (pastorData[0] is not '0'):
                         if (len(pastorData[1]) > 3):
                             ElementTree.SubElement(pastorEntry, 'date').text = pastorData[1].strip()
-                            ElementTree.SubElement(pastorEntry, 'inaccuracy').text = pastorData[0].strip()
+                            pastorEntry.set('inaccuracy', str(pastorData[0].strip()))
                     else:
                         if (len(pastorData[1]) > 3):
                             ElementTree.SubElement(pastorEntry, 'date').text = pastorData[1].strip()
@@ -338,7 +338,7 @@ class SegmentAnalyzer:
                     if (institutionData[0] is not '0'):
                         if (len(institutionData[1]) > 3):
                             ElementTree.SubElement(institutionEntry, 'date').text = institutionData[1].strip()
-                            ElementTree.SubElement(institutionEntry, 'inaccuracy').text = institutionData[0].strip()
+                            institutionEntry.set('inaccuracy', str(institutionData[0].strip()))
                     else:
                         if (len(institutionData[1]) > 3):
                             ElementTree.SubElement(institutionEntry, 'date').text = institutionData[1].strip()
@@ -360,7 +360,7 @@ class SegmentAnalyzer:
                     if (teacherData[0] is not '0'):
                         if (len(teacherData[1]) > 3):
                             ElementTree.SubElement(teacherEntry, 'date').text = teacherData[1].strip()
-                            ElementTree.SubElement(teacherEntry, 'inaccuracy').text = teacherData[0].strip()
+                            teacherEntry.set('inaccuracy', str(teacherData[0].strip()))
                     else:
                         if (len(teacherData[1]) > 3):
                             ElementTree.SubElement(teacherEntry, 'date').text = teacherData[1].strip()
@@ -382,7 +382,7 @@ class SegmentAnalyzer:
                     if (educationData[0] is not '0'):
                         if (len(educationData[1]) > 3):
                             ElementTree.SubElement(educationEntry, 'date').text = educationData[1].strip()
-                            ElementTree.SubElement(educationEntry, 'inaccuracy').text = educationData[0].strip()
+                            educationEntry.set('inaccuracy', str(educationData[0].strip()))
                     else:
                         if (len(educationData[1]) > 3):
                             ElementTree.SubElement(educationEntry, 'date').text = educationData[1].strip()
