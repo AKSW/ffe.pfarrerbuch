@@ -404,10 +404,10 @@ class SegmentAnalyzer:
         if (self.vicar.literature is not None):
             ElementTree.SubElement(entry, 'literature').text = self.vicar.literature.strip()
 
-        #rawData
-        if (self.vicar.rawData is not None):
-            text = ''
-            for line in self.vicar.rawData:
+        #original
+        if (self.vicar.original is not None):
+            text = '\n'
+            for line in self.vicar.original:
                 text = text + line
-            entry.tail = text
+            ElementTree.SubElement(entry, 'original').text = text
         return entry

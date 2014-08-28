@@ -12,7 +12,7 @@ class Writer:
         i = 0
         for segment in parser.segmentation(parser.readInputFile()):
             vicar = Vicar(i)
-            vicar.rawData = segment
+            vicar.original = segment
             analyzer = SegmentAnalyzer(segment, vicar)
             analyzer.createEntry(self.root)
             i = i + 1
