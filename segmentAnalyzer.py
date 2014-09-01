@@ -166,15 +166,18 @@ class SegmentAnalyzer:
                 analyzed[2] = bracket2
         return analyzed
 
-    def createSubentries(self, vicarElement, elementName, entry, idToggle):
+    def createSubentries(self, vicarElement, elementName, entry, idToggle, bracket):
         if (idToggle):
             for element in vicarElement:
                 elementEntry = ElementTree.SubElement(entry, elementName)
                 elementEntry.set('id', str(self.vicar.id) + '-' + str(self.eventId))
                 self.eventId += 1
                 if ('(' in element):
-                    ElementTree.SubElement(elementEntry, 'name').text = element[:element.find('(')].strip()
                     elementData = self.analyzeBrackets(element)
+                    if (len(elementData[2]) > 2 and bracket):
+                        ElementTree.SubElement(elementEntry, 'name').text = element[:element.find('(')].strip() + ' (' + elementData[2] + ')'
+                    else:
+                        ElementTree.SubElement(elementEntry, 'name').text = element[:element.find('(')].strip()
                     if (elementData[0] is not '0'):
                         if (len(elementData[1]) > 3):
                             ElementTree.SubElement(elementEntry, 'date').text = elementData[1].strip()
@@ -182,7 +185,7 @@ class SegmentAnalyzer:
                     else:
                         if (len(elementData[1]) > 3):
                             ElementTree.SubElement(elementEntry, 'date').text = elementData[1].strip()
-                    if (len(elementData[2]) > 2):
+                    if (len(elementData[2]) > 2 and not bracket):
                         ElementTree.SubElement(elementEntry, 'place').text = elementData[2].strip()
                 else:
                     ElementTree.SubElement(elementEntry, 'name').text = element.strip()
@@ -190,8 +193,11 @@ class SegmentAnalyzer:
             for element in vicarElement:
                 elementEntry = ElementTree.SubElement(entry, elementName)
                 if ('(' in element):
-                    ElementTree.SubElement(elementEntry, 'name').text = element[:element.find('(')].strip()
                     elementData = self.analyzeBrackets(element)
+                    if (len(elementData[2]) > 2 and bracket):
+                        ElementTree.SubElement(elementEntry, 'name').text = element[:element.find('(')].strip() + ' (' + elementData[2] + ')'
+                    else:
+                        ElementTree.SubElement(elementEntry, 'name').text = element[:element.find('(')].strip()
                     if (elementData[0] is not '0'):
                         if (len(elementData[1]) > 3):
                             ElementTree.SubElement(elementEntry, 'date').text = elementData[1].strip()
@@ -273,37 +279,37 @@ class SegmentAnalyzer:
 
         #Siblings
         if len(self.vicar.siblings) > 0:
-            self.createSubentries(self.vicar.siblings, 'sibling', entry, False)
+            self.createSubentries(self.vicar.siblings, 'sibling', entry, False, True)
         del(self.vicar.siblings[:])
 
         #Offspring
         if len(self.vicar.offspring) > 0:
-            self.createSubentries(self.vicar.offspring, 'offspring', entry, False)
+            self.createSubentries(self.vicar.offspring, 'offspring', entry, False, True)
         del(self.vicar.offspring[:])
 
         #Vicars
         if len(self.vicar.vicars) > 0:
-            self.createSubentries(self.vicar.vicars, 'vicar', entry, False)
+            self.createSubentries(self.vicar.vicars, 'vicar', entry, False, True)
         del(self.vicar.vicars[:])
 
         #Pastors
         if len(self.vicar.pastors) > 0:
-            self.createSubentries(self.vicar.pastors, 'pastor', entry, True)
+            self.createSubentries(self.vicar.pastors, 'pastor', entry, True, True)
         del(self.vicar.pastors[:])
 
         #Institutions
         if len(self.vicar.institutions) > 0:
-            self.createSubentries(self.vicar.institutions, 'institution', entry, True)
+            self.createSubentries(self.vicar.institutions, 'institution', entry, True, True)
         del(self.vicar.institutions[:])
 
         #Teachers
         if len(self.vicar.teachers) > 0:
-            self.createSubentries(self.vicar.teachers, 'teacher', entry, True)
+            self.createSubentries(self.vicar.teachers, 'teacher', entry, True, True)
         del(self.vicar.teachers[:])
 
         #Education
         if len(self.vicar.education) > 0:
-            self.createSubentries(self.vicar.education, 'education', entry, True)
+            self.createSubentries(self.vicar.education, 'education', entry, True, True)
         del(self.vicar.education[:])
 
         #Misc
