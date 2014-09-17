@@ -35,9 +35,13 @@ class SegmentAnalyzer:
         #2 = forename
         #3 = forename variations
 
-        if ('(' not in name):
-            splitname[0] = name.split(',')[0]
-            splitname[2] = name.split(',')[1]
+        commaSplit = name.split(',');
+
+        if (len(commaSplit) < 2):
+            splitname[0] = name
+        elif ('(' not in name):
+            splitname[0] = commaSplit[0]
+            splitname[2] = commaSplit[1]
 
         #one bracket
         elif (name.find('(') == name.rfind('(')):
@@ -58,6 +62,7 @@ class SegmentAnalyzer:
             splitname[1] = name[name.find('(') + 1:name.find(')')]
             splitname[2] = name[name.find(')') + 2:name.rfind('(')]
             splitname[3] = name[name.rfind('(') + 1:name.rfind(')')]
+
         return splitname
 
     def parsedate(self, text):
