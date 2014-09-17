@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ElementTree
 from vicar import Vicar
 from segmentAnalyzer import SegmentAnalyzer
 import xml.dom.minidom as minidom
+import sys
 
 class Writer:
     def __init__(self):
@@ -11,11 +12,17 @@ class Writer:
         self.parser = parser
         i = 0
         for segment in parser.segmentation(parser.readInputFile()):
-            vicar = Vicar(i)
-            vicar.original = segment
-            analyzer = SegmentAnalyzer(segment, vicar)
-            analyzer.createEntry(self.root)
+            try:
+                vicar = Vicar(i)
+                vicar.original = segment
+                analyzer = SegmentAnalyzer(segment, vicar)
+                analyzer.createEntry(self.root)
+            except Exception as err:
+                sys.stderr.write('segment number: %s\n' % str(i))
+                sys.stderr.write('ERROR: %s\n' % str(err))
+                sys.stderr.write('in segment: %s\n' % segment)
             i = i + 1
+
 
     def dumpToFile(self, outputFile):
         xmlString = ElementTree.tostring(self.root, encoding="unicode")

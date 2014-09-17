@@ -44,7 +44,7 @@ class Parser:
         f.close()
         return text
 
-    def segmentation(self, text):         # creates segments from the text
+    def segmentationRobert(self, text):         # creates segments from the text
         segments = []
         segment = []
         count = 0
@@ -64,7 +64,75 @@ class Parser:
                 count = 1
             elif count == 0:
                 segment.append(line)
+        print(len(segments))
         return segments
+
+    def segmentation(self, text):         # creates segments from the text
+        #print("segmentation")
+        segments = []
+        segment = []
+        ws = True
+        for line in text:
+            if ws and len(line.strip()) > 0:
+                segment.append(line)
+                ws = False
+            elif not ws and len(line.strip()) > 0:
+                segment.append(line)
+            elif not ws and len(line.strip()) == 0:
+                # check if last segment matches pattern
+                if checkSegmentPattern(segment):
+                    segments.append(segment)
+                segment = []
+                ws = True
+        if checkSegmentPattern(segment):
+             nsegments.append(segment)
+        print(len(segments))
+        return segments
+
+def checkSegmentPattern(segment):
+    count = 0
+    o = 0 # offset
+    if len(segment) < 15:
+        return False
+    if segment[o+1].startswith("NB!"):
+        o = o + 1
+    if not segment[o+1].startswith("Ord.:"):
+        print("ord")
+        return False
+    if not segment[o+2].startswith("*"):
+        print("birth")
+        return False
+    if not segment[o+3].startswith("†"):
+        print("death")
+        return False
+    if not segment[o+4].startswith("8") and not segment[o+4].startswith("∞"):
+        print("mary")
+        return False
+    if not segment[o+5].startswith("P:"):
+        print("p")
+        return False
+    if not segment[o+6].startswith("M:"):
+        print("m")
+        return False
+    if not segment[o+7].startswith("Fr:"):
+        return False
+    if not segment[o+8].startswith("Fi:"):
+        return False
+    if not segment[o+9].startswith("St:"):
+        return False
+    if not segment[o+10].startswith("LM:"):
+        return False
+    if not segment[o+11].startswith("VDM:"):
+        return False
+    if not segment[o+12].startswith("S:"):
+        return False
+    if not segment[o+13].startswith("N:"):
+        return False
+    if not segment[o+14].startswith("A:"):
+        o = o - 1
+    if not segment[o+15].startswith("Lit:"):
+        return False
+    return True
 
 
 def main(argv):
