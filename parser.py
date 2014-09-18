@@ -44,29 +44,6 @@ class Parser:
         f.close()
         return text
 
-    def segmentationRobert(self, text):         # creates segments from the text
-        segments = []
-        segment = []
-        count = 0
-        for line in text:
-            if count == 0 and line == "\n":
-                segments.append(segment[:])
-                segment[:] = []
-                count = 1
-            elif count == 1 and line != "\n":
-                buf = line
-                count = 2
-            elif count == 2 and "Ord.:" in line:
-                segment.append(buf)
-                segment.append(line)
-                count = 0
-            elif count == 2:
-                count = 1
-            elif count == 0:
-                segment.append(line)
-        print(len(segments))
-        return segments
-
     def segmentation(self, text):         # creates segments from the text
         #print("segmentation")
         segments = []
@@ -85,7 +62,7 @@ class Parser:
                 segment = []
                 ws = True
         if checkSegmentPattern(segment):
-             nsegments.append(segment)
+             segments.append(segment)
         print(len(segments))
         return segments
 
@@ -94,9 +71,14 @@ def checkSegmentPattern(segment):
     o = 0 # offset
     if len(segment) < 15:
         return False
+    if segment[o].strip().endswith("."):
+        if segment[o].strip()[:-1].isdigit():
+            segment[o:o+1] = []
+    if segment[o].strip().isdigit():
+        segment[o:o+1] = []
     if segment[o+1].startswith("NB!"):
         o = o + 1
-    if not segment[o+1].startswith("Ord.:"):
+    if not segment[o+1].strip().startswith("Ord.:"):
         print("ord")
         return False
     if not segment[o+2].startswith("*"):
@@ -108,29 +90,47 @@ def checkSegmentPattern(segment):
     if not segment[o+4].startswith("8") and not segment[o+4].startswith("∞"):
         print("mary")
         return False
-    if not segment[o+5].startswith("P:"):
-        print("p")
-        return False
+    while not segment[o+5].startswith("P:"):
+        segment[o+4] = segment[o+4] + "; " + segment[o+5]
+        segment[o+5:o+6] = []
+        if segment[o+6].startswith("M:"):
+            break
     if not segment[o+6].startswith("M:"):
         print("m")
         return False
     if not segment[o+7].startswith("Fr:"):
+        print("fr")
         return False
     if not segment[o+8].startswith("Fi:"):
+        print("fi")
         return False
     if not segment[o+9].startswith("St:"):
+        print("st")
         return False
+    if segment[o+10].startswith("V:"):
+        o = o + 1
     if not segment[o+10].startswith("LM:"):
+        print("lm")
+        print(segment)
         return False
+    if segment[o+11].startswith("V:") or segment[o+11].startswith("V."):
+        o = o + 1
+    if segment[o+11].startswith("KL:"):
+        o = o + 1
     if not segment[o+11].startswith("VDM:"):
+        print("vdm")
+        print(segment)
         return False
     if not segment[o+12].startswith("S:"):
+        print("s")
         return False
     if not segment[o+13].startswith("N:"):
+        print("n")
         return False
     if not segment[o+14].startswith("A:"):
         o = o - 1
     if not segment[o+15].startswith("Lit:"):
+        print("lit")
         return False
     return True
 
