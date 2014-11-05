@@ -66,25 +66,34 @@ class SegmentAnalyzer:
         return splitname
 
     def parsedate(self, text):
-        date = ['0'] * 2
-        if (re.search('\d+.\d+.\d+', text)):
-            date[0] = re.findall('\d+.\d+.\d+', text)[0]
-        elif (re.search('\d+.\d+', text)):
-            date[0] = re.findall('\d+.\d+', text)[0]
+        date = ['0'] * 3
+        if (re.search('\d+\.\d+\.\d+', text)):
+            matches = re.findall('(\d+)\.(\d+)\.(\d+)', text)
+            dateString = matches[0][0] + '-' + matches[0][1] + '-' + matches[0][2]
+            date[0] = dateString
+            date[1] = 'date'
+        elif (re.search('\d+\.\d+', text)):
+            matches = re.findall('(\d+)\.(\d+)', text)
+            dateString = matches[0][0] + '-' + matches[0][1]
+            date[0] = dateString
+            date[1] = 'gYearMonth'
         elif (re.search('\d\d\d\d', text)):
             date[0] = re.findall('\d\d\d\d', text)[0]
+            date[1] = 'gYear'
+        else :
+            print("else date: " + text)
         if ('k.' in text):
-            date[1] = 'k.'
+            date[2] = 'k.'
         elif ('e.' in text):
-            date[1] = 'e.'
+            date[2] = 'e.'
         elif ('előtt' in text):
-            date[1] = 'előtt'
+            date[2] = 'előtt'
         elif ('u.' in text):
-            date[1] = 'u.'
+            date[2] = 'u.'
         elif ('után' in text):
-            date[1] = 'után'
+            date[2] = 'után'
         elif ('?' in text):
-            date[1] = '?'
+            date[2] = '?'
         return date
 
     def analyzeBrackets(self, text):
@@ -243,36 +252,21 @@ class SegmentAnalyzer:
             ordination = ElementTree.SubElement(entry, 'ordination')
             ElementTree.SubElement(ordination, 'place').text = self.vicar.ordination.strip().split(',')[0]
             if (len(self.vicar.ordination.strip().split(',')) == 2):
-                date = self.parsedate(self.vicar.ordination.strip())
-                if (date[1] is not '0' and date[0] is not '0'):
-                    ElementTree.SubElement(ordination, 'date').text = date[0].strip()
-                    ordination.set('inaccuracy', str(date[1].strip()))
-                elif (date[0] is not '0'):
-                    ElementTree.SubElement(ordination, 'date').text = date[0]
+                self.dateElement(self.vicar.ordination.strip(), ordination)
 
         #birthday
         if (self.vicar.birthday is not None):
             birthday = ElementTree.SubElement(entry, 'birthday')
             ElementTree.SubElement(birthday, 'place').text = self.vicar.birthday.strip().split(',')[0]
             if (len(self.vicar.birthday.strip().split(',')) == 2):
-                date = self.parsedate(self.vicar.birthday.strip())
-                if (date[1] is not '0' and date[0] is not '0'):
-                    ElementTree.SubElement(birthday, 'date').text = date[0].strip()
-                    birthday.set('inaccuracy', str(date[1].strip()))
-                elif (date[0] is not '0'):
-                    ElementTree.SubElement(birthday, 'date').text = date[0]
+                self.dateElement(self.vicar.birthday.strip(), birthday)
 
         #obit
         if (self.vicar.obit is not None):
             obit = ElementTree.SubElement(entry, 'obit')
             ElementTree.SubElement(obit, 'place').text = self.vicar.obit.strip().split(',')[0]
             if (len(self.vicar.obit.strip().split(',')) == 2):
-                date = self.parsedate(self.vicar.obit.strip())
-                if (date[1] is not '0' and date[0] is not '0'):
-                    ElementTree.SubElement(obit, 'date').text = date[0].strip()
-                    obit.set('inaccuracy', str(date[1].strip()))
-                elif (date[0] is not '0'):
-                    ElementTree.SubElement(obit, 'date').text = date[0]
+                self.dateElement(self.vicar.obit.strip(), obit)
 
         #Father
         if (self.vicar.father is not None):
@@ -336,3 +330,13 @@ class SegmentAnalyzer:
                 text = text + line
             ElementTree.SubElement(entry, 'original').text = text
         return entry
+
+    def dateElement (self, text, parent):
+        date = self.parsedate(text)
+        if (date[0] is not '0'):
+            dateElement = ElementTree.SubElement(parent, 'date')
+            dateElement.text = date[0].strip()
+        if (len(date) > 1 and date[1] is not '0'):
+            dateElement.set('datatype', str(date[1].strip()))
+        if (len(date) > 2 and date[2] is not '0'):
+            dateElement.set('inaccuracy', str(date[2].strip()))

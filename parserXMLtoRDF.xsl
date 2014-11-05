@@ -6,9 +6,9 @@
 <!ENTITY pfarrer "http://pfarrerbuch.comiles.eu/">
 <!ENTITY person "http://pfarrerbuch.comiles.eu/ungarn/person/">
 <!ENTITY place "http://pfarrerbuch.comiles.eu/ungarn/ort/">
-<!ENTITY position "http://pfarrerbuch.comiles.eu/ungarn/position/">
-<!ENTITY school "http://pfarrerbuch.comiles.eu/ungarn/school/">
-<!ENTITY staffing "http://pfarrerbuch.comiles.eu/ungarn/staffing/">
+<!ENTITY position "http://pfarrerbuch.comiles.eu/ungarn/stelle/">
+<!ENTITY school "http://pfarrerbuch.comiles.eu/ungarn/schule/">
+<!ENTITY staffing "http://pfarrerbuch.comiles.eu/ungarn/stellenbesetzung/">
 <!ENTITY foaf "http://xmlns.com/foaf/0.1/">
 <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#">
@@ -54,20 +54,31 @@
             <!-- Attributes -->
             <xsl:apply-templates select="id" />
             <!--<xsl:attribute name="rdfs:label">Name und Lebensdaten</xsl:attribute>-->
-            <xsl:if test="birthday/date">
-                <xsl:attribute name="hp:birthDate"><xsl:value-of select="birthday/date" /></xsl:attribute>
-            </xsl:if>
-            <xsl:if test="ordination/date">
-                <xsl:attribute name="hp:dateOfOrdination"><xsl:value-of select="ordination/date" /></xsl:attribute>
-            </xsl:if>
-            <xsl:if test="obit/date">
-                <xsl:attribute name="hp:dateOfDeath"><xsl:value-of select="obit/date" /></xsl:attribute>
-            </xsl:if>
 
             <!-- Elements -->
             <xsl:apply-templates select="name" />
             <xsl:element name="hp:isPastor"><xsl:attribute name="rdf:datatype">&xsd;boolean</xsl:attribute>true</xsl:element>
 
+            <!-- Dates -->
+            <xsl:call-template name="date">
+                <xsl:with-param name="date" select="birthday/date" />
+                <xsl:with-param name="datatype" select="birthday/date/@datatype" />
+                <xsl:with-param name="property">hp:birthDate</xsl:with-param>
+            </xsl:call-template>
+
+            <xsl:call-template name="date">
+                <xsl:with-param name="date" select="ordination/date" />
+                <xsl:with-param name="datatype" select="ordination/datei/@datatype" />
+                <xsl:with-param name="property">hp:dateOfOrdination</xsl:with-param>
+            </xsl:call-template>
+
+            <xsl:call-template name="date">
+                <xsl:with-param name="date" select="obit/date" />
+                <xsl:with-param name="datatype" select="obit/date/@datatype" />
+                <xsl:with-param name="property">hp:dateOfDeath</xsl:with-param>
+            </xsl:call-template>
+
+            <!-- Places -->
             <xsl:call-template name="place">
                 <xsl:with-param name="place" select="birthday/place" />
                 <xsl:with-param name="property">hp:birthPlace</xsl:with-param>
@@ -129,7 +140,15 @@
     </xsl:template>
 
     <xsl:template match="name">
-        <xsl:element name="foaf:name"><xsl:value-of select="surname" />, <xsl:value-of select="forename" /></xsl:element>
+        <xsl:element name="foaf:name">
+            <xsl:if test="surname != '0'">
+                <xsl:value-of select="surname" />
+            </xsl:if>
+            <xsl:text>, </xsl:text>
+            <xsl:if test="forename != '0'">
+                <xsl:value-of select="forename" />
+            </xsl:if>
+        </xsl:element>
         <xsl:apply-templates select="surname">
             <xsl:with-param name="property">foaf:lastName</xsl:with-param>
         </xsl:apply-templates>
@@ -148,7 +167,9 @@
     <xsl:template match="surname|forename|surnameVariation|forenameVariation">
         <xsl:param name="property"/>
         <xsl:element name="{$property}">
-            <xsl:value-of select="." />
+            <xsl:if test=". != '0'">
+                <xsl:value-of select="." />
+            </xsl:if>
         </xsl:element>
     </xsl:template>
 
@@ -425,4 +446,18 @@
         </xsl:element>
     </xsl:template>
 
+    <xsl:template name="date">
+        <xsl:param name="date"/>
+        <xsl:param name="datatype"/>
+        <!-- inaccuracy -->
+        <xsl:param name="property"/>
+        <xsl:if test="$date != ''">
+            <xsl:element name="{$property}">
+                <xsl:if test="$datatype != ''">
+                    <xsl:attribute name="rdf:datatype">&xsd;<xsl:value-of select="$datatype"/></xsl:attribute>
+                </xsl:if>
+                <xsl:value-of select="$date"/>
+            </xsl:element>
+        </xsl:if>
+    </xsl:template>
 </xsl:stylesheet>
