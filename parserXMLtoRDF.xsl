@@ -68,7 +68,7 @@
 
             <xsl:call-template name="date">
                 <xsl:with-param name="date" select="ordination/date" />
-                <xsl:with-param name="datatype" select="ordination/datei/@datatype" />
+                <xsl:with-param name="datatype" select="ordination/date/@datatype" />
                 <xsl:with-param name="property">hp:dateOfOrdination</xsl:with-param>
             </xsl:call-template>
 
@@ -114,7 +114,7 @@
                 <xsl:element name="rdfs:comment"><xsl:value-of select="misc" /></xsl:element>
             </xsl:if>
             <xsl:if test="literature">
-                <xsl:element name="rdfs:comment"><xsl:value-of select="literature" /></xsl:element>
+                <xsl:element name="hp:source"><xsl:value-of select="literature" /></xsl:element>
             </xsl:if>
         </xsl:element>
         <!-- end of foaf:Person -->
@@ -353,10 +353,10 @@
                 <xsl:with-param name="objectUri" select="$objectUri" />
             </xsl:call-template>
             <xsl:if test="str:tokenize($date,'-')[1] != ''">
-                <xsl:element name="hp:start"><xsl:value-of select="str:tokenize($date,'-')[1]"/></xsl:element>
+                <xsl:element name="hp:start"><xsl:attribute name="rdf:datatype">&xsd;gYear</xsl:attribute><xsl:value-of select="str:tokenize($date,'-')[1]"/></xsl:element>
             </xsl:if>
             <xsl:if test="str:tokenize($date,'-')[2] != ''">
-                <xsl:element name="hp:end"><xsl:value-of select="str:tokenize($date,'-')[2]"/></xsl:element>
+                <xsl:element name="hp:end"><xsl:attribute name="rdf:datatype">&xsd;gYear</xsl:attribute><xsl:value-of select="str:tokenize($date,'-')[2]"/></xsl:element>
             </xsl:if>
             <xsl:if test="$label != ''">
                 <xsl:element name="rdfs:label"><xsl:value-of select="$label"/></xsl:element>
